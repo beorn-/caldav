@@ -2234,10 +2234,19 @@ class Event(CalendarObjectResource):
 
     As of 2020-12 it adds nothing to the inheritated class.  (I have
     frequently asked myself if we need those subclasses ... perhaps
-    not)
+    not).
+
+    NB: Just added the get_duration method
     """
 
-    pass
+    def get_duration(self):
+        i = self.icalendar_component
+        if "DURATION" in i:
+            return i["DURATION"].dt
+        elif "DTSTART" in i and "DTEND" in i:
+            return i["DTEND"].dt - i["DTSTART"].dt
+        else:
+            return timedelta(0)
 
 
 class Journal(CalendarObjectResource):
